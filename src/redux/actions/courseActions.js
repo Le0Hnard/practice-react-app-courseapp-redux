@@ -1,5 +1,6 @@
 import * as types from "./actionTypes";
 import * as courseApi from "../../api/courseApi";
+import { beginApiCall, apiCallError } from "./apiStatusActions";
 
 export function createCourse(course) {
   return {
@@ -29,14 +30,20 @@ export function updateCourseSuccess(course) {
   }
 }
 
+export function deleteCourseOptimistic(course) {
+  return { type: types.DELETE_COURSE_OPTIMISTIC, course };
+}
+
 // thunks
 export function loadCourses() {
   return function (dispatch) {
+    dispatch(beginApiCall());
     return courseApi.getCourses()
       .then(courses => {
         dispatch(loadCoursesSuccess(courses));
       })
       .catch(error => {
+        dispatch(apiCallError(error));
         throw error;
       });
   }
@@ -44,6 +51,7 @@ export function loadCourses() {
 
 export function saveCourse(course) {
   return function (dispatch, getState) { // getState can access the Redux store data
+    dispatch(beginApiCall());
     return courseApi.saveCourse(course)
       .then(savedCourse => {
         course.id
@@ -51,7 +59,17 @@ export function saveCourse(course) {
         : dispatch(createCourseSuccess(savedCourse))
       })
       .catch(error => {
+        dispatch(apiCallError(error));
         throw error;
       });
+  }
+}
+
+export function deleteCourse(course) {
+  // Doing optimistic delete
+  // No dispatching of begin/end api call, actions or apiCallError because no loading status is shown.
+  return function (dispatch) {
+    dispatch(deleteCourseOptimistic(course));
+    return courseApi.deleteCourse(course.id);
   }
 }

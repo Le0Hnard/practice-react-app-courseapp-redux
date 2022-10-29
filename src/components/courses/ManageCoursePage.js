@@ -4,10 +4,13 @@ import { loadCourses, saveCourse } from "../../redux/actions/courseActions";
 import { loadAuthors } from "../../redux/actions/authorActions";
 import CourseForm from "./CourseForm";
 import { newCourse } from "../../tools/mockData";
+import Spinner from "../common/Spinner";
+import { toast } from "react-toastify";
 
 const ManageCoursePage = ({ authors, courses, loadCourses, loadAuthors, saveCourse, history, ...props }) => {
   const [course, setCourse] = useState({ ...props.course });
   const [errors, setErrors] = useState({});
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     if(courses.length === 0) {
@@ -35,21 +38,46 @@ const ManageCoursePage = ({ authors, courses, loadCourses, loadAuthors, saveCour
     }));
   };
 
+  const formIsValid = () => {
+    const { title, authorId, category } = courses;
+    const errors = {};
+
+    if(!title) errors.title = "Title is required.";
+    if(!authorId) errors.author = "Author is required.";
+    if(!category) errors.category = "Category is required.";
+
+    setErrors(errors);
+
+    return Object.keys(errors).length === 0;
+  };
+
   const handleSave = event => {
     event.preventDefault();
-    saveCourse(course).then(() => { // passed from props not from the above import (bound function in mapDispatchToProps)
+    if(!formIsValid()) return;
+    setSaving(true);
+    saveCourse(course)
+    .then(() => { // passed from props not from the above import (bound function in mapDispatchToProps)
+      toast.success("Course saved.");
       history.push("/courses");
+    })
+    .catch(error => {
+      setErrors({ onSave: error.message });
     });
   };
 
   return (
-    <CourseForm 
-      course={ course } 
-      errors={ errors } 
-      authors={ authors } 
-      onChange={ handleChange } 
-      onSave={ handleSave }
-    />
+    courses.length === 0 || authors.length === 0
+    ? <Spinner />
+    : (
+      <CourseForm 
+        course={ course } 
+        errors={ errors } 
+        authors={ authors } 
+        onChange={ handleChange } 
+        onSave={ handleSave }
+        saving={ saving }
+      />
+    )
   );
 };
 
