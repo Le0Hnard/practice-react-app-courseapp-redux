@@ -18,8 +18,9 @@ export function saveCourse(course) {
 }
 
 export function deleteCourse(courseId) {
-  // return fetch(baseUrl + courseId, { method: "DELETE" })
-  return fetch(baseUrl + 10000, { method: "DELETE" })
+  // to simulate error on delete
+  return fetch(baseUrl + courseId, { method: "DELETE" })
+  // return fetch(baseUrl + 10000, { method: "DELETE" })
     .then(handleResponse)
     .catch(handleError);
 }
