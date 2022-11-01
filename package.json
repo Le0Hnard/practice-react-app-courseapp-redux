@@ -6,8 +6,18 @@
     "prestart:api": "node src/tools/createMockDb.js",
     "start:api": "node src/tools/apiServer.js",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "jest --watch",
     "eject": "react-scripts eject"
+  },
+  "jest": {
+    "setupFilesAfterEnv": [
+      "./src/tools/testSetup.js"
+    ],
+    "testEnvironment": "jsdom",
+    "moduleNameMapper": {
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/src/tools/fileMock.js",
+      "\\.(css|less)$": "<rootDir>/src/tools/styleMock.js"
+    }
   },
   "dependencies": {
     "bootstrap": "5.0.2",
