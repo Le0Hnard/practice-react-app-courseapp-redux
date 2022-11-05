@@ -6,7 +6,7 @@
     "prestart:api": "node src/tools/createMockDb.js",
     "start:api": "node src/tools/apiServer.js",
     "build": "react-scripts build",
-    "test": "jest --watch",
+    "test": "jest",
     "eject": "react-scripts eject"
   },
   "jest": {

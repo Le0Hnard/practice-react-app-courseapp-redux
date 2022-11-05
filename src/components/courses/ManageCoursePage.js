@@ -7,7 +7,8 @@ import { newCourse } from "../../tools/mockData";
 import Spinner from "../common/Spinner";
 import { toast } from "react-toastify";
 
-const ManageCoursePage = ({ authors, courses, loadCourses, loadAuthors, saveCourse, history, ...props }) => {
+//This exports the unconnected version of the component
+export const ManageCoursePage = ({ authors, courses, loadCourses, loadAuthors, saveCourse, history, ...props }) => {
   const [course, setCourse] = useState({ ...props.course });
   const [errors, setErrors] = useState({});
   const [saving, setSaving] = useState(false);
@@ -104,4 +105,5 @@ const mapDispatchToProps = {
   saveCourse // from above import
 }
 
+//This exports the connected version of the component
 export default connect(mapStateToProps, mapDispatchToProps)(ManageCoursePage);
