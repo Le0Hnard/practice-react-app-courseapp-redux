@@ -16,7 +16,7 @@ it("should add course when passed CREATE_COURSE_SUCCESS", () => {
     title: "C"
   };
 
-  const action = actions.createCourseSuccess(newCourse);
+  const action = actions.createCourse(newCourse);
 
   // act
   const newState = courseReducer(initialState, action);
